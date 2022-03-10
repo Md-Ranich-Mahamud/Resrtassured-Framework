@@ -1,0 +1,96 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'org.springframework.boot' version '2.6.2'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+
+}
+
+group 'org.example'
+version '1.0.1-SNAPSHOT'
+
+repositories {
+    mavenLocal()
+    maven{
+        cradentials{
+            username "$mavenUser"
+            password "$mavenPassword"
+        }
+        url = uri('https://repo.maven.apache.org/maven2/')
+    }
+}
+
+dependencies {
+
+    implementation 'io.rest-assured:rest-assured:4.5.0'
+    implementation 'org.testng:testng:7.5'
+    implementation 'org.slf4j:slf4j-api:1.7.5'
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+    implementation 'org.slf4j:slf4j-simple:1.7.32'
+    implementation'com.fastterxml.jackson.core:jackson-databind:2.13.1'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.junit.platform:junit-platform-suite-engine:1.8.2'
+    testImplementation 'org.junit.platform:junit-platform-launcher:1.6.2'
+    implementation'org.skyscreamer:jsonassert:1.5.0'
+    implementation 'com.progsbase.libraries:JSON:0.4.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    testImplementation 'io.rest-assured:json-path:4.5.0'
+    testImplementation 'io.rest-assured:xml-path:4.5.0'
+
+
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+description = 'Fiserv_Restassured_Framework'
+java.sourceCompatibility = JavaVersion.VERSION_14
+
+publishing {
+    publications {
+        bootJava(MavenPublication){
+            artifacts bootJar
+        }
+    }
+
+    repositories {
+        mavenLocal()
+        maven{
+            cradentials{
+                username "$mavenUser"
+                password "$mavenPassword"
+            }
+            url = uri('https://repo.maven.apache.org/maven2/')
+        }
+    }
+}
+
+bootJar{
+    from sourceSets.test.output
+    mainfest {
+        attributes(
+                'Start-Class': 'RegressionTestSuiteApplication'
+        )
+    }
+    from{
+        configurations.testImplementation.collect{it.isDirectory() ?it : zipTree(it)}
+    }
+}
+configurations {
+    testImplementation{
+        canBeResolved = true
+    }
+}
+
+rootProject.tasks.named("bootjar"){
+    duplicatesStrategy = 'include'
+}
+
+jar{
+    enabled = false
+}
+
+test {
+    useJUnitPlatform()
+}
+
