@@ -4,6 +4,7 @@ public enum StatusCode {
 
     CODE_200(200,""),
     CODE_201(201,""),
+    CODE_500(500,"")
     CODE_400(400,"Missing required field: name");
 
     public final int code;
